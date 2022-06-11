@@ -1,0 +1,394 @@
+#+options: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+options: author:t broken-links:nil c:nil creator:nil
+#+options: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+options: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+options: timestamp:t title:t toc:t todo:t |:t
+#+title: Bash Startup Files
+#+date: <2022-06-11 Sat>
+#+author: Kristian Alexander P
+#+email: alexforsale@yahoo.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 28.1 (Org mode 9.5.2)
+#+property: EXPORT_FILE_NAME: index.html
+#+cite_export:
+* ~/.bashrc
+  :PROPERTIES:
+  :header-args: :tangle ~/.bashrc :padline no :shebang #!/usr/bin/env bash
+  :END:
+** header
+   #+begin_src sh
+     # Begin ~/.bashrc
+     # Personal aliases and functions.
+
+     # Personal environment variables and startup programs should go in
+     # ~/.bash_profile.  System wide environment variables and startup
+     # programs are in /etc/profile.  System wide aliases and functions are
+     # in /etc/bashrc.
+
+     # references
+     # https://gist.github.com/zachbrowne/8bc414c9f30192067831fafebd14255c
+     # <alexforsale@yahoo.com>
+   #+end_src
+** do nothing if non-interactive
+   #+begin_src sh
+     # If not running interactively, don't do anything
+     [[ $- != *i* ]] && return
+
+     if [[ -f "/etc/bashrc" ]] ; then
+           source /etc/bashrc
+     elif [[ -f "/etc/bash.bashrc" ]]; then
+           source /etc/bash.bashrc
+     fi
+   #+end_src
+** bash directories
+   #+begin_src sh
+     # setup directory for everything bash-related
+     BASH_DIR=$XDG_CONFIG_HOME/bash.d
+     BASH_DATA=$XDG_DATA_HOME/bash
+
+     [[ ! -d ${BASH_DIR} ]] && mkdir -p "$BASH_DIR"
+     [[ ! -d ${BASH_DATA} ]] && mkdir -p "$BASH_DATA"
+   #+end_src
+** shell options
+   #+begin_src sh
+     # check the window size after each command and, if necessary,
+     # update the values of LINES and COLUMNS.
+     shopt -s checkwinsize
+   #+end_src
+** aliases
+   #+begin_src sh
+     # Alias definitions.
+     # You may want to put all your additions into a separate file like
+     # $BASH_DIR/bash_aliases, instead of adding them here directly.
+     # See /usr/share/doc/bash-doc/examples in the bash-doc package.
+     if [[ -f "${BASH_DIR}/bash_aliases" ]]; then
+           . "${BASH_DIR}"/bash_aliases
+     fi
+   #+end_src
+** completion
+   #+begin_src sh
+     if [[ -z "${BASH_COMPLETION_VERSINFO}" ]];then
+        # enable programmable completion features (you don't need to enable
+        # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+        # sources /etc/bash.bashrc).
+        if [[ -f /etc/bash_completion ]] && ! shopt -oq posix; then
+              . /etc/bash_completion
+        elif [[ -f /usr/share/bash_completion/bash_completion ]] && ! shopt -oq posix; then
+              . /usr/share/bash_completion/bash_completion
+        elif [[ -f /usr/local/share/bash_completion/bash_completion ]] && ! shopt -oq posix; then
+              . /usr/local/share/bash_completion/bash_completion
+        elif [[ -f /etc/bash/bashrc.d/bash_completion.sh ]] && ! shopt -oq posix; then
+              . /etc/bash/bashrc.d/bash_completion.sh
+        fi
+     fi
+
+     # user completion files
+     if [[ -d "{$BASH_DIR}/bash_completion.d" ]]; then
+           for i in "${BASH_DIR}"/bash_completion.d/*.bash; do
+                 if [[ -r ${i} ]]; then
+                       . "${i}"
+                 fi
+             done
+           unset i
+     fi
+   #+end_src
+** color prompt
+   #+begin_src sh
+     # color prompt, this is gentoo bashrc file
+     [[ -f "${BASH_DIR}/colors.bash" ]] && . "$BASH_DIR"/colors.bash
+   #+end_src
+** history
+   #+begin_src sh
+     # history
+     [[ -f "${BASH_DIR}/history.bash" ]] && . "${BASH_DIR}"/history.bash
+   #+end_src
+** custom functions
+   #+begin_src sh
+     # functions
+     [[ -f "${BASH_DIR}/functions.bash" ]] && . "${BASH_DIR}"/functions.bash
+   #+end_src
+** freebsd specifics
+   #+begin_src sh
+     if [[ "${DISTRO}" != "freebsd" ]]; then
+           iatest=$(expr index "$-" i)
+           if [[ ${iatest} -gt 0 ]]; then
+                 # Disable the bell
+                 bind "set bell-style visible";
+
+                 # Ignore case on auto-completion
+                 # Note: bind used instead of sticking these in .inputrc
+                 bind "set completion-ignore-case on";
+
+                 # Show auto-completion list automatically, without double tab
+                 bind "set show-all-if-ambiguous On";
+           fi
+     fi
+   #+end_src
+** history navigation with ctrl-r
+   #+begin_src sh
+     # Allow ctrl-S for history navigation (with ctrl-R)
+     stty -ixon
+   #+end_src
+** local override
+   #+begin_src sh
+     # local bashrc
+     if [[ -f "${BASH_DIR}/bashrc.local" ]];then
+        . "${BASH_DIR}"/bashrc.local
+     fi
+        # End ~/.bashrc
+   #+end_src
+* ~/.bash_profile
+  :PROPERTIES:
+  :header-args: :tangle ~/.bash_profile :padline no :shebang #!/usr/bin/env bash
+  :END:
+** header
+   #+begin_src sh
+     #!/usr/bin/env bash
+     # Begin ~/.bash_profile
+     # Personal environment variables and startup programs.
+     # <alexforsale@yahoo.com>
+
+     # Personal aliases and functions should go in ~/.bashrc.  System wide
+     # environment variables and startup programs are in /etc/profile.
+     # System wide aliases and functions are in /etc/bashrc.
+   #+end_src
+** source ~~/etc/profile~
+   #+begin_src sh
+     [[ -f /etc/profile ]] && source /etc/profile
+   #+end_src
+** This differs in several /Linux distribution/.
+   #+begin_src sh
+     # in the actual startup sequences, "~/.bash_profile" is invoked
+     # before "~/.profile" so we need to source "~/.profile" first.
+     [[ -f ${HOME}/.profile ]] && source "${HOME}"/.profile
+     [[ -f ${HOME}/.bashrc ]] && source "${HOME}"/.bashrc
+   #+end_src
+** local override
+   #+begin_src sh
+     # local bash_profile
+     # ${BASH_DIR} should already set by now
+     [[ -f ${BASH_DIR}/bash_profile.local ]] && source "${BASH_DIR}"/bash_profile.local
+
+     # End ~/.bash_profile
+   #+end_src
+* ~/.bash_logout
+  :PROPERTIES:
+  :header-args: :tangle ~/.bash_logout :padline no :shebang #!/usr/bin/env bash
+  :END:
+** header
+   #+begin_src sh
+     # Begin ~/.bash_logout
+     # Written for Beyond Linux From Scratch
+     # by James Robertson <jameswrobertson@earthlink.net>
+
+     # Personal items to perform on logout.
+   #+end_src
+** clear console on logout
+   #+begin_src sh
+     # when leaving the console clear the screen to increase privacy
+
+     if [ "$SHLVL" = 1 ]; then
+           #[ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
+           [ -x /usr/bin/clear ] && /usr/bin/clear
+     fi
+
+     # End ~/.bash_logout
+   #+end_src
+* ~/.config/bash.d
+** bash_aliases
+   :PROPERTIES:
+   :header-args: :tangle ~/.config/bash.d/bash_aliases :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :END:
+*** color support of most of the =coreutils=
+    #+begin_src sh
+      # enable color support of ls and also add handy aliases
+      if [ -x /usr/bin/dircolors ]; then
+            test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+            alias ls='ls --color=auto'
+            #alias dir='dir --color=auto'
+            #alias vdir='vdir --color=auto'
+
+            #BSD#@export CLICOLOR=1
+            #GNU#@alias ls='ls --color=auto'
+            export CLICOLOR=1
+            alias grep='grep --color=auto'
+            alias fgrep='fgrep --color=auto'
+            alias egrep='egrep --color=auto'
+            alias diff='diff --color=auto'
+            alias ip='ip -color=auto'
+      fi
+    #+end_src
+*** ls aliases
+    #+begin_src sh
+      # some more ls aliases
+      alias ll='ls -alF'
+      alias la='ls -A'
+      alias l='ls -CF'
+    #+end_src
+*** alert
+    #+begin_src sh
+      # Add an "alert" alias for long running commands. Use like so:
+      # sleep 10; alert
+      alias alert='notify-send --expire-time=2000 --urgency=low --icon="$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+      alias xp='xprop | grep "WM_WINDOW_ROLE\|WM_CLASS" && echo "WM_CLASS(STRING) = \"NAME\", \"CLASS\""'
+    #+end_src
+** colors.bash
+   :PROPERTIES:
+   :header-args: :tangle ~/.config/bash.d/colors.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :END:
+*** ${PS1}
+    #+begin_src sh
+      # Set colorful PS1 only on colorful terminals.
+      # dircolors --print-database uses its own built-in database
+      # instead of using /etc/DIR_COLORS.  Try to use the external file
+      # first to take advantage of user additions.
+      # We run dircolors directly due to its changes in file syntax and
+      # terminal name patching.
+      use_color=false
+      if type -P dircolors >/dev/null ; then
+            # Enable colors for ls, etc.  Prefer ~/.dir_colors #64489
+            LS_COLORS=
+            if [[ -f ~/.dir_colors ]] ; then
+                  eval "$(dircolors -b ~/.dir_colors)"
+            elif [[ -f /etc/DIR_COLORS ]] ; then
+                  eval "$(dircolors -b /etc/DIR_COLORS)"
+            else
+                eval "$(dircolors -b)"
+            fi
+            # Note: We always evaluate the LS_COLORS setting even when it's the
+            # default.  If it isn't set, then `ls` will only colorize by default
+            # based on file attributes and ignore extensions (even the compiled
+            # in defaults of dircolors). #583814
+            if [[ -n ${LS_COLORS:+set} ]] ; then
+                  use_color=true
+            else
+                # Delete it if it's empty as it's useless in that case.
+                unset LS_COLORS
+            fi
+      else
+          # Some systems (e.g. BSD & embedded) don't typically come with
+          # dircolors so we need to hardcode some terminals in here.
+          case ${TERM} in
+              [aEkx]term*|rxvt*|gnome*|konsole*|screen|cons25|*color) use_color=true;;
+          esac
+      fi
+      if ${use_color} ; then
+            if [[ ${EUID} == 0 ]] ; then
+                PS1='\[\033[01;31m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '
+            else
+                PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '
+            fi
+      else
+          # show root@ when we don't have colors
+          PS1+='\u@\h \w \$ '
+      fi
+
+      for sh in /etc/bash/bashrc.d/* ; do
+            [[ -r ${sh} ]] && source "${sh}"
+      done
+
+      # Try to keep environment pollution down, EPA loves us.
+      unset use_color sh
+    #+end_src
+** functions.bash
+   :PROPERTIES:
+   :header-args: :tangle ~/.config/bash.d/functions.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :END:
+*** header
+    #+begin_src sh
+      # begin ~/.config/bash.d/functions.bash
+    #+end_src
+*** pathremove
+    #+begin_src sh
+      if [ ! "$(type pathremove >/dev/null 2>&1)" ] ; then
+            pathremove () {
+                local IFS=':'
+                local NEWPATH
+                local DIR
+                local PATHVARIABLE=${2:-PATH}
+                for DIR in ${!PATHVARIABLE} ; do
+                      if [ "${DIR}" != "${1}" ] ; then
+                            NEWPATH=${NEWPATH:+$NEWPATH:}$DIR
+                      fi
+                done
+                export "$PATHVARIABLE"="${NEWPATH}"
+            }
+            export -f pathremove
+      fi
+    #+end_src
+*** pathprepend
+    #+begin_src sh
+      if [ ! "$(type pathprepend >/dev/null 2>&1)" ] ; then
+            pathprepend () {
+                pathremove "${1}" "${2}"
+                local PATHVARIABLE=${2:-PATH}
+                export "$PATHVARIABLE"="$1${!PATHVARIABLE:+:${!PATHVARIABLE}}"
+            }
+            export -f pathprepend
+      fi
+    #+end_src
+*** pathappend
+    #+begin_src sh
+      if [ ! "$(type pathappend >/dev/null 2>&1)" ] ; then
+            pathappend () {
+                pathremove "${1}" "${2}"
+                local PATHVARIABLE=${2:-PATH}
+                export "$PATHVARIABLE"="${!PATHVARIABLE:+${!PATHVARIABLE}:}$1"
+            }
+            export -f pathappend
+      fi
+      # end ~/.config/bash.d/functions.bash
+    #+end_src
+** history.bash
+   :PROPERTIES:
+   :header-args: :tangle ~/.config/bash.d/history.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :END:
+*** set the location of history file
+    #+begin_src sh
+      export HISTFILE="$BASH_DATA"/bash_history
+    #+end_src
+*** move previous history to current file (if any)
+    #+begin_src sh
+      if [ -f "$HOME/.bash_history " ]; then
+            if [ -f "$HISTFILE" ]; then
+                  cat "$HOME"/.bash_history >> "$HISTFILE"
+            fi
+            rm "$HOME"/.bash_history
+      fi
+    #+end_src
+*** Save 5,000 lines of history in memory
+    #+begin_src sh
+      HISTSIZE=10000
+    #+end_src
+*** Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)
+    #+begin_src sh
+      HISTFILESIZE=2000000
+    #+end_src
+*** Append to history instead of overwrite
+    #+begin_src sh
+      shopt -s histappend
+    #+end_src
+*** Ignore redundant or space commands
+    #+begin_src sh
+      HISTCONTROL=ignoreboth
+    #+end_src
+*** Ignore more
+    #+begin_src sh
+      HISTIGNORE='ls:ll:ls -alh:pwd:clear:history'
+    #+end_src
+*** Set time format
+    #+begin_src sh
+      HISTTIMEFORMAT='%F %T '
+    #+end_src
+*** Multiple commands on one line show up as a single line
+    #+begin_src sh
+      shopt -s cmdhist
+    #+end_src
+*** Append new history lines, clear the history list, re-read the history list, print prompt.
+    Currently unused
+    #+begin_src sh :tangle no
+      export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+    #+end_src
