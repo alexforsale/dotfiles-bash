@@ -31,6 +31,9 @@ BASH_DATA=$XDG_DATA_HOME/bash
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # $BASH_DIR/bash_aliases, instead of adding them here directly.
