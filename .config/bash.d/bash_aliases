@@ -28,7 +28,7 @@ alias alert='notify-send --expire-time=2000 --urgency=low --icon="$([ $? = 0 ] &
 alias xp='xprop | grep "WM_WINDOW_ROLE\|WM_CLASS" && echo "WM_CLASS(STRING) = \"NAME\", \"CLASS\""'
 
 # only if running in windows wsl
-if [ "$(grep -qEi (microsoft|wsl) /proc/version)" ] &&
+if [ "$(grep -qEi '(microsoft|wsl)' /proc/version)" ] &&
        [ "$(command -v emacs)" ]; then
     alias emax='
 export DISPLAY=:0.0
