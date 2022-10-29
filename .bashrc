@@ -19,6 +19,11 @@ elif [[ -f "/etc/bash.bashrc" ]]; then
     source /etc/bash.bashrc
 fi
 
+# wsl 2 hacks
+if [[ -z "${XDG_CONFIG_HOME}" ]] &&
+       [[ -r "${HOME}/.profile" ]]; then
+    . "${HOME}/.profile"
+fi
 
 # setup directory for everything bash-related
 BASH_DIR=$XDG_CONFIG_HOME/bash.d
