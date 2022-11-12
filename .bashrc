@@ -13,7 +13,7 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-if [[ -f "/etc/bashrc" ]] ; then
+if [[ -f "/etc/bashrc" ]]; then
     source /etc/bashrc
 elif [[ -f "/etc/bash.bashrc" ]]; then
     source /etc/bash.bashrc
@@ -21,7 +21,7 @@ fi
 
 # wsl 2 hacks
 if [[ -z "${XDG_CONFIG_HOME}" ]] &&
-       [[ -r "${HOME}/.profile" ]]; then
+    [[ -r "${HOME}/.profile" ]]; then
     . "${HOME}/.profile"
 fi
 
@@ -48,7 +48,7 @@ if [[ -f "${BASH_DIR}/bash_aliases" ]]; then
     . "${BASH_DIR}"/bash_aliases
 fi
 
-if [[ -z "${BASH_COMPLETION_VERSINFO}" ]];then
+if [[ -z "${BASH_COMPLETION_VERSINFO}" ]]; then
     # enable programmable completion features (you don't need to enable
     # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
     # sources /etc/bash.bashrc).
@@ -63,14 +63,18 @@ if [[ -z "${BASH_COMPLETION_VERSINFO}" ]];then
     fi
 fi
 
+if [[ -e /usr/share/doc/pkgfile/command-not-found.bash ]]; then
+    . /usr/share/doc/pkgfile/command-not-found.bash
+fi
+
 # user completion files
 if [[ -d "{$BASH_DIR}/bash_completion.d" ]]; then
-  for i in "${BASH_DIR}"/bash_completion.d/*.bash; do
-    if [[ -r ${i} ]]; then
-      . "${i}"
-    fi
-  done
-  unset i
+    for i in "${BASH_DIR}"/bash_completion.d/*.bash; do
+        if [[ -r ${i} ]]; then
+            . "${i}"
+        fi
+    done
+    unset i
 fi
 
 # color prompt, this is gentoo bashrc file
@@ -83,25 +87,25 @@ fi
 [[ -f "${BASH_DIR}/functions.bash" ]] && . "${BASH_DIR}"/functions.bash
 
 if [[ "${DISTRO}" != "freebsd" ]]; then
-iatest=$(expr index "$-" i)
-if [[ ${iatest} -gt 0 ]]; then
-    # Disable the bell
-    bind "set bell-style visible";
+    iatest=$(expr index "$-" i)
+    if [[ ${iatest} -gt 0 ]]; then
+        # Disable the bell
+        bind "set bell-style visible"
 
-    # Ignore case on auto-completion
-    # Note: bind used instead of sticking these in .inputrc
-    bind "set completion-ignore-case on";
+        # Ignore case on auto-completion
+        # Note: bind used instead of sticking these in .inputrc
+        bind "set completion-ignore-case on"
 
-    # Show auto-completion list automatically, without double tab
-    bind "set show-all-if-ambiguous On";
-fi
+        # Show auto-completion list automatically, without double tab
+        bind "set show-all-if-ambiguous On"
+    fi
 fi
 
 # Allow ctrl-S for history navigation (with ctrl-R)
 stty -ixon
 
 # local bashrc
-if [[ -f "${BASH_DIR}/bashrc.local" ]];then
-   . "${BASH_DIR}"/bashrc.local
+if [[ -f "${BASH_DIR}/bashrc.local" ]]; then
+    . "${BASH_DIR}"/bashrc.local
 fi
 # End ~/.bashrc
