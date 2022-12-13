@@ -19,4 +19,5 @@
 # ${BASH_DIR} should already set by now
 [[ -f ${BASH_DIR}/bash_profile.local ]] && source "${BASH_DIR}"/bash_profile.local
 
+export TERM=xterm-256color
 # End ~/.bash_profile
