@@ -104,6 +104,8 @@ fi
 # Allow ctrl-S for history navigation (with ctrl-R)
 stty -ixon
 
+export GPG_TTY="$(tty)"
+
 # local bashrc
 if [[ -f "${BASH_DIR}/bashrc.local" ]]; then
     . "${BASH_DIR}"/bashrc.local
