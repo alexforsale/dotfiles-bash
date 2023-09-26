@@ -35,4 +35,7 @@ if [ ! "$(type pathappend >/dev/null 2>&1)" ] ; then
     export -f pathappend
 fi
 
+if [ -e ~/.config/bash.d/99-poetry.bash ]; then
+    source ~/.config/bash.d/99-poetry.bash
+fi
 # end ~/.config/bash.d/functions.bash
