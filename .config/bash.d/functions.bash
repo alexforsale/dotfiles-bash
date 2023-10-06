@@ -36,6 +36,6 @@ if [ ! "$(type pathappend >/dev/null 2>&1)" ] ; then
 fi
 
 if [ -e ~/.config/bash.d/99-poetry.bash ]; then
-    source ~/.config/bash.d/99-poetry.bash
+    #source ~/.config/bash.d/99-poetry.bash
 fi
 # end ~/.config/bash.d/functions.bash
