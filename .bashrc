@@ -26,8 +26,8 @@ if [[ -z "${XDG_CONFIG_HOME}" ]] &&
 fi
 
 # setup directory for everything bash-related
-BASH_DIR=$XDG_CONFIG_HOME/bash.d
-BASH_DATA=$XDG_DATA_HOME/bash
+BASH_DIR=${XDG_CONFIG_HOME:-~/.config}/bash.d
+BASH_DATA=${XDG_DATA_HOME:-~/.local/share}/bash
 
 [[ ! -d ${BASH_DIR} ]] && mkdir -p "$BASH_DIR"
 [[ ! -d ${BASH_DATA} ]] && mkdir -p "$BASH_DATA"
@@ -118,4 +118,3 @@ if [ -n "$GUIX_ENVIRONMENT" ]; then
         PS1="${BASH_REMATCH[1]} [env]\\\$ "
     fi
 fi
-
