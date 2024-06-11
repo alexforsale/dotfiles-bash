@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-06-11 Tue 02:26 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bash Startup Files</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Kristian Alexander P" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Bash Startup Files</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orga30d105">1. ~/.bashrc</a>
+<ul>
+<li><a href="#orgf4b98fa">1.1. do nothing if non-interactive</a></li>
+<li><a href="#org60a2e23">1.2. bash directories</a></li>
+<li><a href="#orgacdb53a">1.3. shell options</a></li>
+<li><a href="#orgc3a38d9">1.4. aliases</a></li>
+<li><a href="#org5f201b0">1.5. completion</a></li>
+<li><a href="#orgdfd3fa8">1.6. color prompt</a></li>
+<li><a href="#org76e3a14">1.7. history</a></li>
+<li><a href="#orgc319351">1.8. custom functions</a></li>
+<li><a href="#org6d54a2b">1.9. freebsd specifics</a></li>
+<li><a href="#org1e5c003">1.10. history navigation with ctrl-r</a></li>
+<li><a href="#orgc8e134e">1.11. local override</a></li>
+</ul>
+</li>
+<li><a href="#org47a4134">2. <code>~/.bash_profile</code></a>
+<ul>
+<li><a href="#org372d96a">2.1. source <code>~/etc/profile</code></a></li>
+<li><a href="#orgecd94c8">2.2. This differs in several <i>Linux distribution</i>.</a></li>
+<li><a href="#orgf1dc2c1">2.3. local override</a></li>
+</ul>
+</li>
+<li><a href="#org110b39b">3. <code>~/.bash_logout</code></a>
+<ul>
+<li><a href="#orge446a2f">3.1. clear console on logout</a></li>
+</ul>
+</li>
+<li><a href="#orgf0c48ab">4. ~/.config/bash.d</a>
+<ul>
+<li><a href="#orga1a5caa">4.1. <code>bash_aliases</code></a>
+<ul>
+<li><a href="#org1a4643c">4.1.1. color support of most of the <code>coreutils</code></a></li>
+<li><a href="#org977628a">4.1.2. ls aliases</a></li>
+<li><a href="#orgdd5b69b">4.1.3. alert</a></li>
+</ul>
+</li>
+<li><a href="#org98d417c">4.2. colors.bash</a>
+<ul>
+<li><a href="#orga90db08">4.2.1. PS1</a></li>
+</ul>
+</li>
+<li><a href="#org5c4c8c3">4.3. functions.bash</a>
+<ul>
+<li><a href="#org16fe614">4.3.1. pathremove</a></li>
+<li><a href="#orgd4b9748">4.3.2. pathprepend</a></li>
+<li><a href="#orgcb9d27f">4.3.3. pathappend</a></li>
+</ul>
+</li>
+<li><a href="#org76c036d">4.4. history.bash</a>
+<ul>
+<li><a href="#org83d3e56">4.4.1. set the location of history file</a></li>
+<li><a href="#orge207a98">4.4.2. move previous history to current file (if any)</a></li>
+<li><a href="#orgd5332c1">4.4.3. Lines of history in memory</a></li>
+<li><a href="#org7393ce2">4.4.4. Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)</a></li>
+<li><a href="#org0de6724">4.4.5. Append to history instead of overwrite</a></li>
+<li><a href="#org5164804">4.4.6. Ignore redundant or space commands</a></li>
+<li><a href="#org9147cef">4.4.7. Ignore more</a></li>
+<li><a href="#org3a0296f">4.4.8. Set time format</a></li>
+<li><a href="#orgfe0b491">4.4.9. Multiple commands on one line show up as a single line</a></li>
+<li><a href="#org104c442">4.4.10. Append new history lines, clear the history list, re-read the history list, print prompt.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+Bash (Bourne Again SHell) is pretty much universal now, almost every unix-like distributions ship bash as the default shell. This is probably because <i>GNU</i> uses bash as their default shell and for those who don't know, linux is GNU/linux. And the GNU collection of utilities are designed to be used with bash as the shell.
+</p>
+
+<p>
+As for the flow of the configuration files:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Description</th>
+<th scope="col" class="org-left">Login shell</th>
+<th scope="col" class="org-left">Interactive, non login shell</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">/etc/profile</td>
+<td class="org-left">Usually will search for /etc/profile.d or /etc/bash.bashrc depending on the distro</td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+</tr>
+
+<tr>
+<td class="org-left">~/.bash_profile</td>
+<td class="org-left">After <i>etc/profile, if not found, will search for ~</i>.bash_login and ~/.profile in that order</td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+</tr>
+
+<tr>
+<td class="org-left">~/.bash_logout</td>
+<td class="org-left">after exit of login shell</td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+</tr>
+
+<tr>
+<td class="org-left">/etc/bash.bash_logout</td>
+<td class="org-left">Depends on the <code>-DSYS_BASH_LOGOUT="/etc/bash.bash_logout"</code> compilation flag. After exit of a login shell.</td>
+<td class="org-left">Yes</td>
+<td class="org-left">No</td>
+</tr>
+
+<tr>
+<td class="org-left">/etc/bash.bashrc</td>
+<td class="org-left">Depends on the <code>-DSYS_BASHRC="/etc/bash.bashrc"</code> compilation flag. Sources /usr/share/bash-completion/bash_completion.</td>
+<td class="org-left">No</td>
+<td class="org-left">Yes</td>
+</tr>
+
+<tr>
+<td class="org-left">~./bashrc</td>
+<td class="org-left">Per-user, after /etc/bash.bashrc.</td>
+<td class="org-left">No</td>
+<td class="org-left">Yes</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Usually, when using a terminal emulator, we must set the shell as <code>bash --login</code> to ensure the startup files is called correctly for each instance of that terminal since it is run from a graphical environment (X or wayland), this is an interactive non-login shell.
+</p>
+
+<p>
+An interactive login shell is started after login (via tty, not display manager like lightdm or gdm).
+</p>
+
+<p>
+As for non-interactive shell is usually present when a shell script is running, it's processing a script not waiting for user input between each commands. Only the environment invoked from the parent shell is used.
+</p>
+
+<p>
+The way I set my bash startup files:
+</p>
+<dl class="org-dl">
+<dt>Try not to mess with the global startup files</dt><dd>Respect the /etc/profile and the likes, they are configured to be used by many other applications. And the distribution maintaners usually sets some variables for that purpose.</dd>
+<dt>Modular</dt><dd>It's basically a script, separate each uses to a specific file.</dd>
+<dt>Simple</dt><dd>Should work on many other distributions that uses bash, I use this configuration for archlinux, ubuntu, debian, even freebsd.</dd>
+</dl>
+
+<div id="outline-container-orga30d105" class="outline-2">
+<h2 id="orga30d105"><span class="section-number-2">1</span> ~/.bashrc</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgf4b98fa" class="outline-3">
+<h3 id="orgf4b98fa"><span class="section-number-3">1.1</span> do nothing if non-interactive</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+For when run as a script.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">If not running interactively, don't do anything</span>
+[[ $<span style="color: #b8860b;">-</span> != *i* ]] &amp;&amp; <span style="color: #4169e1;">return</span>
+
+  <span style="color: #4169e1;">if</span> [[ -f <span style="color: #bc8f8f;">"/etc/bashrc"</span> ]] ; <span style="color: #4169e1;">then</span>
+      source /etc/bashrc
+  <span style="color: #4169e1;">elif</span> [[ -f <span style="color: #bc8f8f;">"/etc/bash.bashrc"</span> ]]; <span style="color: #4169e1;">then</span>
+      source /etc/bash.bashrc
+  <span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org60a2e23" class="outline-3">
+<h3 id="org60a2e23"><span class="section-number-3">1.2</span> bash directories</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+I'm separating the configuration into smaller files. <code>XDG_CONFIG_HOME</code> and <code>XDG_DATA_HOME</code> should be set by the system, I also declared them in my repository for <a href="https://github.com/alexforsale/dotfiles-shells/">common shells</a>.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">setup directory for everything bash-related</span>
+<span style="color: #b8860b;">BASH_DIR</span>=<span style="color: #bc8f8f;">"${XDG_CONFIG_HOME:-~/.config}"</span>/bash.d
+<span style="color: #b8860b;">BASH_DATA</span>=<span style="color: #bc8f8f;">"${XDG_DATA_HOME:-~/.local/share}"</span>/bash
+
+[[ ! -d <span style="color: #bc8f8f;">"${BASH_DIR}"</span> ]] &amp;&amp; mkdir -p <span style="color: #bc8f8f;">"$BASH_DIR"</span>
+[[ ! -d <span style="color: #bc8f8f;">"${BASH_DATA}"</span> ]] &amp;&amp; mkdir -p <span style="color: #bc8f8f;">"$BASH_DATA"</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgacdb53a" class="outline-3">
+<h3 id="orgacdb53a"><span class="section-number-3">1.3</span> shell options</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+There's many more shell options for bash, but I don't use them much.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">check the window size after each command and, if necessary,</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">update the values of LINES and COLUMNS.</span>
+shopt -s checkwinsize
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc3a38d9" class="outline-3">
+<h3 id="orgc3a38d9"><span class="section-number-3">1.4</span> aliases</h3>
+<div class="outline-text-3" id="text-1-4">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">Alias definitions.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">You may want to put all your additions into a separate file like</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">$BASH_DIR/bash_aliases, instead of adding them here directly.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">See /usr/share/doc/bash-doc/examples in the bash-doc package.</span>
+<span style="color: #4169e1;">if</span> [[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/bash_aliases"</span> ]]; <span style="color: #4169e1;">then</span>
+    . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/bash_aliases
+<span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+<p>
+Note that in <i>archlinux</i> the /usr/share/doc/bash-doc is not exists
+</p>
+</div>
+</div>
+<div id="outline-container-org5f201b0" class="outline-3">
+<h3 id="org5f201b0"><span class="section-number-3">1.5</span> completion</h3>
+<div class="outline-text-3" id="text-1-5">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #4169e1;">if</span> [[ -z <span style="color: #bc8f8f;">"${BASH_COMPLETION_VERSINFO}"</span> ]];<span style="color: #4169e1;">then</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">enable programmable completion features (you don't need to enable</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">this, if it's already enabled in /etc/bash.bashrc and /etc/profile</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">sources /etc/bash.bashrc).</span>
+    <span style="color: #4169e1;">if</span> [[ -f /etc/bash_completion ]] &amp;&amp; ! shopt -oq posix; <span style="color: #4169e1;">then</span>
+        . /etc/bash_completion
+    <span style="color: #4169e1;">elif</span> [[ -f /usr/share/bash_completion/bash_completion ]] &amp;&amp; ! shopt -oq posix; <span style="color: #4169e1;">then</span>
+        . /usr/share/bash_completion/bash_completion
+    <span style="color: #4169e1;">elif</span> [[ -f /usr/local/share/bash_completion/bash_completion ]] &amp;&amp; ! shopt -oq posix; <span style="color: #4169e1;">then</span>
+        . /usr/local/share/bash_completion/bash_completion
+    <span style="color: #4169e1;">elif</span> [[ -f /etc/bash/bashrc.d/bash_completion.sh ]] &amp;&amp; ! shopt -oq posix; <span style="color: #4169e1;">then</span>
+        . /etc/bash/bashrc.d/bash_completion.sh
+    <span style="color: #4169e1;">fi</span>
+<span style="color: #4169e1;">fi</span>
+
+<span style="color: #b22222;"># </span><span style="color: #b22222;">user completion files</span>
+<span style="color: #4169e1;">if</span> [[ -d <span style="color: #bc8f8f;">"{$BASH_DIR}/bash_completion.d"</span> ]]; <span style="color: #4169e1;">then</span>
+    <span style="color: #4169e1;">for</span> i<span style="color: #4169e1;"> in</span> <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/bash_completion.d/*.bash; <span style="color: #4169e1;">do</span>
+        <span style="color: #4169e1;">if</span> [[ -r ${<span style="color: #b8860b;">i</span>} ]]; <span style="color: #4169e1;">then</span>
+            . <span style="color: #bc8f8f;">"${i}"</span>
+        <span style="color: #4169e1;">fi</span>
+    <span style="color: #4169e1;">done</span>
+    <span style="color: #00008b;">unset</span> i
+<span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+<p>
+This should cover every location for bash completion.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdfd3fa8" class="outline-3">
+<h3 id="orgdfd3fa8"><span class="section-number-3">1.6</span> color prompt</h3>
+<div class="outline-text-3" id="text-1-6">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">color prompt, this is gentoo bashrc file</span>
+[[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/colors.bash"</span> ]] &amp;&amp; . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/colors.bash
+</pre>
+</div>
+<p>
+Taken from gentoo i guess&#x2026;
+</p>
+</div>
+</div>
+<div id="outline-container-org76e3a14" class="outline-3">
+<h3 id="org76e3a14"><span class="section-number-3">1.7</span> history</h3>
+<div class="outline-text-3" id="text-1-7">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">history</span>
+[[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/history.bash"</span> ]] &amp;&amp; . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/history.bash
+</pre>
+</div>
+<p>
+setup history
+</p>
+</div>
+</div>
+<div id="outline-container-orgc319351" class="outline-3">
+<h3 id="orgc319351"><span class="section-number-3">1.8</span> custom functions</h3>
+<div class="outline-text-3" id="text-1-8">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">functions</span>
+[[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/functions.bash"</span> ]] &amp;&amp; . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/functions.bash
+</pre>
+</div>
+<p>
+Put custom functions in a file.
+</p>
+</div>
+</div>
+<div id="outline-container-org6d54a2b" class="outline-3">
+<h3 id="org6d54a2b"><span class="section-number-3">1.9</span> freebsd specifics</h3>
+<div class="outline-text-3" id="text-1-9">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #4169e1;">if</span> [[ <span style="color: #bc8f8f;">"${DISTRO}"</span> != <span style="color: #bc8f8f;">"freebsd"</span> ]]; <span style="color: #4169e1;">then</span>
+    <span style="color: #b8860b;">iatest</span>=$(expr index <span style="color: #bc8f8f;">"$-"</span> i)
+    <span style="color: #4169e1;">if</span> [[ ${<span style="color: #b8860b;">iatest</span>} -gt 0 ]]; <span style="color: #4169e1;">then</span>
+        <span style="color: #b22222;"># </span><span style="color: #b22222;">Disable the bell</span>
+        bind <span style="color: #bc8f8f;">"set bell-style visible"</span>;
+
+        <span style="color: #b22222;"># </span><span style="color: #b22222;">Ignore case on auto-completion</span>
+        <span style="color: #b22222;"># </span><span style="color: #b22222;">Note: bind used instead of sticking these in .inputrc</span>
+        bind <span style="color: #bc8f8f;">"set completion-ignore-case on"</span>;
+
+        <span style="color: #b22222;"># </span><span style="color: #b22222;">Show auto-completion list automatically, without double tab</span>
+        bind <span style="color: #bc8f8f;">"set show-all-if-ambiguous On"</span>;
+    <span style="color: #4169e1;">fi</span>
+<span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+<p>
+Some settings specific to FreeBSD.
+</p>
+</div>
+</div>
+<div id="outline-container-org1e5c003" class="outline-3">
+<h3 id="org1e5c003"><span class="section-number-3">1.10</span> history navigation with ctrl-r</h3>
+<div class="outline-text-3" id="text-1-10">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">Allow ctrl-S for history navigation (with ctrl-R)</span>
+stty -ixon
+</pre>
+</div>
+<p>
+Enable CTRL-s and CTRL-r
+</p>
+</div>
+</div>
+<div id="outline-container-orgc8e134e" class="outline-3">
+<h3 id="orgc8e134e"><span class="section-number-3">1.11</span> local override</h3>
+<div class="outline-text-3" id="text-1-11">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">local bashrc</span>
+<span style="color: #4169e1;">if</span> [[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/bashrc.local"</span> ]];<span style="color: #4169e1;">then</span>
+   . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/bashrc.local
+<span style="color: #4169e1;">fi</span>
+   <span style="color: #b22222;"># </span><span style="color: #b22222;">End ~/.bashrc</span>
+</pre>
+</div>
+<p>
+In case I need to override all or some settings above, I'll put them in this file.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org47a4134" class="outline-2">
+<h2 id="org47a4134"><span class="section-number-2">2</span> <code>~/.bash_profile</code></h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org372d96a" class="outline-3">
+<h3 id="org372d96a"><span class="section-number-3">2.1</span> source <code>~/etc/profile</code></h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+<pre class="src src-sh">[[ -f /etc/profile ]] &amp;&amp; source /etc/profile
+</pre>
+</div>
+<p>
+Making sure that /etc/profile is also sourced, the only downside is some variables, such as PATH, would be declared multiple times. Depending on how the PATH is set, the variable will have repeated paths. But in my common shell repository I make sure that each item is unique.
+</p>
+</div>
+</div>
+<div id="outline-container-orgecd94c8" class="outline-3">
+<h3 id="orgecd94c8"><span class="section-number-3">2.2</span> This differs in several <i>Linux distribution</i>.</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">in the actual startup sequences, "~/.bash_profile" is invoked</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">before "~/.profile" so we need to source "~/.profile" first.</span>
+[[ -f ${<span style="color: #b8860b;">HOME</span>}/.profile ]] &amp;&amp; source <span style="color: #bc8f8f;">"${HOME}"</span>/.profile
+[[ -f ${<span style="color: #b8860b;">HOME</span>}/.bashrc ]] &amp;&amp; source <span style="color: #bc8f8f;">"${HOME}"</span>/.bashrc
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf1dc2c1" class="outline-3">
+<h3 id="orgf1dc2c1"><span class="section-number-3">2.3</span> local override</h3>
+<div class="outline-text-3" id="text-2-3">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">local bash_profile</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">${BASH_DIR} should already set by now</span>
+[[ -f ${<span style="color: #b8860b;">BASH_DIR</span>}/bash_profile.local ]] &amp;&amp; source <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/bash_profile.local
+
+<span style="color: #b22222;"># </span><span style="color: #b22222;">End ~/.bash_profile</span>
+</pre>
+</div>
+<p>
+Again, in case I need to override all or some settings above&#x2026;
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org110b39b" class="outline-2">
+<h2 id="org110b39b"><span class="section-number-2">3</span> <code>~/.bash_logout</code></h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orge446a2f" class="outline-3">
+<h3 id="orge446a2f"><span class="section-number-3">3.1</span> clear console on logout</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">when leaving the console clear the screen to increase privacy</span>
+
+  <span style="color: #4169e1;">if</span> [ <span style="color: #bc8f8f;">"$SHLVL"</span> = 1 ]; <span style="color: #4169e1;">then</span>
+      <span style="color: #b22222;">#</span><span style="color: #b22222;">[ -x /usr/bin/clear_console ] &amp;&amp; /usr/bin/clear_console -q</span>
+      [ -x /usr/bin/clear ] &amp;&amp; /usr/bin/clear
+  <span style="color: #4169e1;">fi</span>
+
+<span style="color: #b22222;"># </span><span style="color: #b22222;">End ~/.bash_logout</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf0c48ab" class="outline-2">
+<h2 id="orgf0c48ab"><span class="section-number-2">4</span> ~/.config/bash.d</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-orga1a5caa" class="outline-3">
+<h3 id="orga1a5caa"><span class="section-number-3">4.1</span> <code>bash_aliases</code></h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Most of the <code>coreutils</code> programs have a syntax for color.
+</p>
+</div>
+<div id="outline-container-org1a4643c" class="outline-4">
+<h4 id="org1a4643c"><span class="section-number-4">4.1.1</span> color support of most of the <code>coreutils</code></h4>
+<div class="outline-text-4" id="text-4-1-1">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">enable color support of ls and also add handy aliases</span>
+<span style="color: #4169e1;">if</span> [ -x /usr/bin/dircolors ]; <span style="color: #4169e1;">then</span>
+    <span style="color: #00008b;">test</span> -r ~/.dircolors &amp;&amp; <span style="color: #00008b;">eval</span> <span style="color: #bc8f8f;">"$(dircolors -b ~/.dircolors)"</span> || <span style="color: #00008b;">eval</span> <span style="color: #bc8f8f;">"$(dircolors -b)"</span>
+    alias <span style="color: #b8860b;">ls</span>=<span style="color: #bc8f8f;">'ls --color=auto'</span>
+    <span style="color: #b22222;">#</span><span style="color: #b22222;">alias dir='dir --color=auto'</span>
+    <span style="color: #b22222;">#</span><span style="color: #b22222;">alias vdir='vdir --color=auto'</span>
+
+    <span style="color: #b22222;">#</span><span style="color: #b22222;">BSD#@export CLICOLOR=1</span>
+    <span style="color: #b22222;">#</span><span style="color: #b22222;">GNU#@alias ls='ls --color=auto'</span>
+    <span style="color: #00008b;">export</span> <span style="color: #b8860b;">CLICOLOR</span>=1
+    alias <span style="color: #b8860b;">grep</span>=<span style="color: #bc8f8f;">'grep --color=auto'</span>
+    alias <span style="color: #b8860b;">fgrep</span>=<span style="color: #bc8f8f;">'fgrep --color=auto'</span>
+    alias <span style="color: #b8860b;">egrep</span>=<span style="color: #bc8f8f;">'egrep --color=auto'</span>
+    alias <span style="color: #b8860b;">diff</span>=<span style="color: #bc8f8f;">'diff --color=auto'</span>
+    alias <span style="color: #b8860b;">ip</span>=<span style="color: #bc8f8f;">'ip -color=auto'</span>
+<span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org977628a" class="outline-4">
+<h4 id="org977628a"><span class="section-number-4">4.1.2</span> ls aliases</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">some more ls aliases</span>
+alias <span style="color: #b8860b;">ll</span>=<span style="color: #bc8f8f;">'ls -alF'</span>
+alias <span style="color: #b8860b;">la</span>=<span style="color: #bc8f8f;">'ls -A'</span>
+alias <span style="color: #b8860b;">l</span>=<span style="color: #bc8f8f;">'ls -CF'</span>
+</pre>
+</div>
+<p>
+Some useful ls aliases.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdd5b69b" class="outline-4">
+<h4 id="orgdd5b69b"><span class="section-number-4">4.1.3</span> alert</h4>
+<div class="outline-text-4" id="text-4-1-3">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">Add an "alert" alias for long running commands. Use like so:</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">sleep 10; alert</span>
+alias <span style="color: #b8860b;">alert</span>=<span style="color: #bc8f8f;">'notify-send --expire-time=2000 --urgency=low --icon="$([ $? = 0 ] &amp;&amp; echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&amp;|]\s*alert$//'\'')"'</span>
+
+alias <span style="color: #b8860b;">xp</span>=<span style="color: #bc8f8f;">'xprop | grep "WM_WINDOW_ROLE\|WM_CLASS" &amp;&amp; echo "WM_CLASS(STRING) = \"NAME\", \"CLASS\""'</span>
+</pre>
+</div>
+<p>
+I don't think I've ever use this anymore, but it still nice to have
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org98d417c" class="outline-3">
+<h3 id="org98d417c"><span class="section-number-3">4.2</span> colors.bash</h3>
+<div class="outline-text-3" id="text-4-2">
+</div>
+<div id="outline-container-orga90db08" class="outline-4">
+<h4 id="orga90db08"><span class="section-number-4">4.2.1</span> PS1</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+Set PS1 when the terminal support it.
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b22222;">#</span><span style="color: #b22222;">!/usr/bin/</span><span style="color: #4169e1;">env</span><span style="color: #b22222;"> bash</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">Set colorful PS1 only on colorful terminals.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">dircolors --print-database uses its own built-in database</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">instead of using /etc/DIR_COLORS.  Try to use the external file</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">first to take advantage of user additions.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">We run dircolors directly due to its changes in file syntax and</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">terminal name patching.</span>
+
+<span style="color: #4169e1;">for</span> sh<span style="color: #4169e1;"> in</span> /etc/bash/bashrc.d/* ; <span style="color: #4169e1;">do</span>
+    [[ -r ${<span style="color: #b8860b;">sh</span>} ]] &amp;&amp; source <span style="color: #bc8f8f;">"${sh}"</span>
+<span style="color: #4169e1;">done</span>
+
+<span style="color: #b8860b;">use_color</span>=false
+<span style="color: #4169e1;">if </span><span style="color: #00008b;">type</span> -P dircolors &gt;/dev/null ; <span style="color: #4169e1;">then</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">Enable colors for ls, etc.  Prefer ~/.dir_colors #64489</span>
+    <span style="color: #b8860b;">LS_COLORS</span>=
+    <span style="color: #4169e1;">if</span> [[ -f ~/.dir_colors ]] ; <span style="color: #4169e1;">then</span>
+        <span style="color: #00008b;">eval</span> <span style="color: #bc8f8f;">"$(dircolors -b ~/.dir_colors)"</span>
+    <span style="color: #4169e1;">elif</span> [[ -f /etc/DIR_COLORS ]] ; <span style="color: #4169e1;">then</span>
+        <span style="color: #00008b;">eval</span> <span style="color: #bc8f8f;">"$(dircolors -b /etc/DIR_COLORS)"</span>
+    <span style="color: #4169e1;">else</span>
+        <span style="color: #00008b;">eval</span> <span style="color: #bc8f8f;">"$(dircolors -b)"</span>
+    <span style="color: #4169e1;">fi</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">Note: We always evaluate the LS_COLORS setting even when it's the</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">default.  If it isn't set, then `ls` will only colorize by default</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">based on file attributes and ignore extensions (even the compiled</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">in defaults of dircolors). #583814</span>
+    <span style="color: #4169e1;">if</span> [[ -n ${<span style="color: #b8860b;">LS_COLORS</span>:+set} ]] ; <span style="color: #4169e1;">then</span>
+        <span style="color: #b8860b;">use_color</span>=true
+    <span style="color: #4169e1;">else</span>
+        <span style="color: #b22222;"># </span><span style="color: #b22222;">Delete it if it's empty as it's useless in that case.</span>
+        <span style="color: #00008b;">unset</span> LS_COLORS
+    <span style="color: #4169e1;">fi</span>
+<span style="color: #4169e1;">else</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">Some systems (e.g. BSD &amp; embedded) don't typically come with</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">dircolors so we need to hardcode some terminals in here.</span>
+    <span style="color: #4169e1;">case</span> ${<span style="color: #b8860b;">TERM</span>} <span style="color: #4169e1;">in</span>
+        [aEkx]term*|rxvt*|gnome*|konsole*|screen*|cons25|*color|linux) <span style="color: #b8860b;">use_color</span>=true;;
+    <span style="color: #4169e1;">esac</span>
+<span style="color: #4169e1;">fi</span>
+
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bash prompt variables</span>
+<span style="color: #b22222;">#</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\a</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">A bell character.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\d</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The date, in "Weekday Month Date" format (e.g., "Tue May 26").</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\D{format}</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The format is passed to strftime(3) and the result is inserted</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">into the prompt string; an empty format results in a locale-specific</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">time representation. The braces are required.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\e</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">An escape character.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\h</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The hostname, up to the first &#8216;.&#8217;.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\H</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The hostname.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\j</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The number of jobs currently managed by the shell.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\l</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The basename of the shell&#8217;s terminal device name.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\n</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">A newline.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\r</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">A carriage return.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\s</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The name of the shell, the basename of $0 (the portion</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">following the final slash).</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\t</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The time, in 24-hour HH:MM:SS format.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\T</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The time, in 12-hour HH:MM:SS format.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\@</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The time, in 12-hour am/pm format.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\A</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The time, in 24-hour HH:MM format.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\u</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The username of the current user.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\v</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The version of Bash (e.g., 2.00)</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\V</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The release of Bash, version + patchlevel (e.g., 2.00.0)</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\w</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The current working directory, with $HOME abbreviated with a</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">tilde (uses the $PROMPT_DIRTRIM variable).</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\W</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The basename of $PWD, with $HOME abbreviated with a tilde.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\!</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The history number of this command.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\#</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The command number of this command.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\$</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">If the effective uid is 0, #, otherwise $.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\nnn</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">The character whose ASCII code is the octal value nnn.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\\</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">A backslash.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\[</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">Begin a sequence of non-printing characters. This could be used to</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">embed a terminal control sequence into the prompt.</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">\]</span>
+<span style="color: #b22222;">#     </span><span style="color: #b22222;">End a sequence of non-printing characters.</span>
+
+<span style="color: #b22222;"># </span><span style="color: #b22222;">ANSI color codes</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">RS="\[\033[0m\]"    # reset</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">HC="\[\033[1m\]"    # hicolor</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">UL="\[\033[4m\]"    # underline</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">INV="\[\033[7m\]"   # inverse background and foreground</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FBLK="\[\033[30m\]" # foreground black</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FRED="\[\033[31m\]" # foreground red</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FGRN="\[\033[32m\]" # foreground green</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FYEL="\[\033[33m\]" # foreground yellow</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FBLE="\[\033[34m\]" # foreground blue</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FMAG="\[\033[35m\]" # foreground magenta</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FCYN="\[\033[36m\]" # foreground cyan</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">FWHT="\[\033[37m\]" # foreground white</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BBLK="\[\033[40m\]" # background black</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BRED="\[\033[41m\]" # background red</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BGRN="\[\033[42m\]" # background green</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BYEL="\[\033[43m\]" # background yellow</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BBLE="\[\033[44m\]" # background blue</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BMAG="\[\033[45m\]" # background magenta</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BCYN="\[\033[46m\]" # background cyan</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">BWHT="\[\033[47m\]" # background white</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtblk='\e[0;30m' # Black - Regular</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtred='\e[0;31m' # Red</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtgrn='\e[0;32m' # Green</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtylw='\e[0;33m' # Yellow</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtblu='\e[0;34m' # Blue</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtpur='\e[0;35m' # Purple</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtcyn='\e[0;36m' # Cyan</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtwht='\e[0;37m' # White</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldblk='\e[1;30m' # Black - Bold</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldred='\e[1;31m' # Red</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldgrn='\e[1;32m' # Green</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldylw='\e[1;33m' # Yellow</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldblu='\e[1;34m' # Blue</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldpur='\e[1;35m' # Purple</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldcyn='\e[1;36m' # Cyan</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bldwht='\e[1;37m' # White</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">unkblk='\e[4;30m' # Black - Underline</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">undred='\e[4;31m' # Red</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">undgrn='\e[4;32m' # Green</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">undylw='\e[4;33m' # Yellow</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">undblu='\e[4;34m' # Blue</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">undpur='\e[4;35m' # Purple</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">undcyn='\e[4;36m' # Cyan</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">undwht='\e[4;37m' # White</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakblk='\e[40m'   # Black - Background</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakred='\e[41m'   # Red</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakgrn='\e[42m'   # Green</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakylw='\e[43m'   # Yellow</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakblu='\e[44m'   # Blue</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakpur='\e[45m'   # Purple</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakcyn='\e[46m'   # Cyan</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">bakwht='\e[47m'   # White</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">txtrst='\e[0m'    # Text Resetreset='\033[0m'</span>
+
+
+<span style="color: #4169e1;">if</span> ${<span style="color: #b8860b;">use_color</span>} ; <span style="color: #4169e1;">then</span>
+    <span style="color: #4169e1;">if</span> [[ ${<span style="color: #b8860b;">EUID</span>} == 0 ]] ; <span style="color: #4169e1;">then</span>
+        <span style="color: #b8860b;">PS1</span>=<span style="color: #bc8f8f;">'\[\033[01;31m\]\h\[\033[01;34m\] \w \$\[\033[00m\] '</span>
+    <span style="color: #4169e1;">else</span>
+        <span style="color: #b22222;">#</span><span style="color: #b22222;">PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \w \$\[\033[00m\] '</span>
+        <span style="color: #4169e1;">case</span> <span style="color: #bc8f8f;">"${DISTRO}"</span><span style="color: #4169e1;"> in</span>
+            <span style="color: #b22222;"># </span><span style="color: #b22222;">nothing fancy, just different colors for hostname</span>
+            <span style="color: #b22222;"># </span><span style="color: #b22222;">blue for arch derivatives</span>
+            <span style="color: #bc8f8f;">"artix"</span>|<span style="color: #bc8f8f;">"arch"</span>)
+                <span style="color: #b8860b;">PS1</span>=<span style="color: #bc8f8f;">"\[\033[0;32m\]\u\[\033[00m\]\e[2m\[\033[1m\]@\[\033[00m\]\[\033[00m\]\[\033[0;34m\]\h\[\033[00m\]\[\033[01;34m\] \w \$\[\033[00m\] "</span>
+                ;;
+            <span style="color: #bc8f8f;">"debian"</span>|<span style="color: #bc8f8f;">"devuan"</span>|<span style="color: #bc8f8f;">"ubuntu"</span>)
+                <span style="color: #b22222;"># </span><span style="color: #b22222;">purple for debian and such</span>
+                <span style="color: #b8860b;">PS1</span>=<span style="color: #bc8f8f;">'\[\033[0;32m\]\u\[\033[00m\]\e[2m\[\033[1m\]@\[\033[00m\]\[\033[00m\]\[\033[0;35m\]\h\[\033[00m\]\[\033[01;34m\] \w \$\[\033[00m\] '</span>
+                ;;
+            <span style="color: #bc8f8f;">"freebsd"</span>)
+                <span style="color: #b22222;"># </span><span style="color: #b22222;">red</span>
+                <span style="color: #b8860b;">PS1</span>=<span style="color: #bc8f8f;">'\[\033[0;32m\]\u\[\033[00m\]\e[2m\[\033[1m\]@\[\033[00m\]\[\033[00m\]\[\033[1;31m\]\h\[\033[00m\]\[\033[01;34m\] \w \$\[\033[00m\] '</span>
+                ;;
+            <span style="color: #bc8f8f;">"gentoo"</span>)
+                <span style="color: #b22222;"># </span><span style="color: #b22222;">bold blue</span>
+                <span style="color: #b8860b;">PS1</span>=<span style="color: #bc8f8f;">'\[\033[0;32m\]\u\[\033[00m\]\e[2m\[\033[1m\]@\[\033[00m\]\[\033[00m\]\[\033[1;34m\]\h\[\033[00m\]\[\033[01;34m\] \w \$\[\033[00m\] '</span>
+        <span style="color: #4169e1;">esac</span>
+    <span style="color: #4169e1;">fi</span>
+<span style="color: #4169e1;">else</span>
+    <span style="color: #b22222;"># </span><span style="color: #b22222;">show root@ when we don't have colors</span>
+    PS1+=<span style="color: #bc8f8f;">'\u@\h \w \$ '</span>
+<span style="color: #4169e1;">fi</span>
+
+<span style="color: #b22222;"># </span><span style="color: #b22222;">Try to keep environment pollution down, EPA loves us.</span>
+<span style="color: #00008b;">unset</span> use_color sh
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org5c4c8c3" class="outline-3">
+<h3 id="org5c4c8c3"><span class="section-number-3">4.3</span> functions.bash</h3>
+<div class="outline-text-3" id="text-4-3">
+</div>
+<div id="outline-container-org16fe614" class="outline-4">
+<h4 id="org16fe614"><span class="section-number-4">4.3.1</span> pathremove</h4>
+<div class="outline-text-4" id="text-4-3-1">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #4169e1;">if</span> [ ! <span style="color: #bc8f8f;">"$(type pathremove &gt;/dev/null 2&gt;&amp;1)"</span> ] ; <span style="color: #4169e1;">then</span>
+    pathremove () {
+        local <span style="color: #b8860b;">IFS</span>=<span style="color: #bc8f8f;">':'</span>
+        local NEWPATH
+        local DIR
+        local <span style="color: #b8860b;">PATHVARIABLE</span>=${<span style="color: #b8860b;">2</span>:-PATH}
+        <span style="color: #4169e1;">for</span> DIR<span style="color: #4169e1;"> in</span> ${<span style="color: #b8860b;">!</span>PATHVARIABLE} ; <span style="color: #4169e1;">do</span>
+            <span style="color: #4169e1;">if</span> [ <span style="color: #bc8f8f;">"${DIR}"</span> != <span style="color: #bc8f8f;">"${1}"</span> ] ; <span style="color: #4169e1;">then</span>
+                <span style="color: #b8860b;">NEWPATH</span>=${<span style="color: #b8860b;">NEWPATH</span>:+$<span style="color: #b8860b;">NEWPATH</span>:}$<span style="color: #b8860b;">DIR</span>
+            <span style="color: #4169e1;">fi</span>
+        <span style="color: #4169e1;">done</span>
+        <span style="color: #00008b;">export</span> <span style="color: #bc8f8f;">"$PATHVARIABLE"</span>=<span style="color: #bc8f8f;">"${NEWPATH}"</span>
+    }
+    <span style="color: #00008b;">export</span> -f pathremove
+<span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+<p>
+This function is for removing an entry from PATH
+</p>
+</div>
+</div>
+<div id="outline-container-orgd4b9748" class="outline-4">
+<h4 id="orgd4b9748"><span class="section-number-4">4.3.2</span> pathprepend</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #4169e1;">if</span> [ ! <span style="color: #bc8f8f;">"$(type pathprepend &gt;/dev/null 2&gt;&amp;1)"</span> ] ; <span style="color: #4169e1;">then</span>
+    pathprepend () {
+        pathremove <span style="color: #bc8f8f;">"${1}"</span> <span style="color: #bc8f8f;">"${2}"</span>
+        local <span style="color: #b8860b;">PATHVARIABLE</span>=${<span style="color: #b8860b;">2</span>:-PATH}
+        <span style="color: #00008b;">export</span> <span style="color: #bc8f8f;">"$PATHVARIABLE"</span>=<span style="color: #bc8f8f;">"$1${!PATHVARIABLE:+:${!PATHVARIABLE}}"</span>
+    }
+    <span style="color: #00008b;">export</span> -f pathprepend
+<span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+<p>
+For prepending an item into PATH
+</p>
+</div>
+</div>
+<div id="outline-container-orgcb9d27f" class="outline-4">
+<h4 id="orgcb9d27f"><span class="section-number-4">4.3.3</span> pathappend</h4>
+<div class="outline-text-4" id="text-4-3-3">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #4169e1;">if</span> [ ! <span style="color: #bc8f8f;">"$(type pathappend &gt;/dev/null 2&gt;&amp;1)"</span> ] ; <span style="color: #4169e1;">then</span>
+    pathappend () {
+        pathremove <span style="color: #bc8f8f;">"${1}"</span> <span style="color: #bc8f8f;">"${2}"</span>
+        local <span style="color: #b8860b;">PATHVARIABLE</span>=${<span style="color: #b8860b;">2</span>:-PATH}
+        <span style="color: #00008b;">export</span> <span style="color: #bc8f8f;">"$PATHVARIABLE"</span>=<span style="color: #bc8f8f;">"${!PATHVARIABLE:+${!PATHVARIABLE}:}$1"</span>
+    }
+    <span style="color: #00008b;">export</span> -f pathappend
+<span style="color: #4169e1;">fi</span>
+<span style="color: #b22222;"># </span><span style="color: #b22222;">end ~/.config/bash.d/functions.bash</span>
+</pre>
+</div>
+<p>
+Appending an item to PATH
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org76c036d" class="outline-3">
+<h3 id="org76c036d"><span class="section-number-3">4.4</span> history.bash</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+Here I set some variable that is use by the bash history. Most of these are self explainatory.
+</p>
+</div>
+<div id="outline-container-org83d3e56" class="outline-4">
+<h4 id="org83d3e56"><span class="section-number-4">4.4.1</span> set the location of history file</h4>
+<div class="outline-text-4" id="text-4-4-1">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #00008b;">export</span> <span style="color: #b8860b;">HISTFILE</span>=<span style="color: #bc8f8f;">"${BASH_DATA}"</span>/bash_history
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge207a98" class="outline-4">
+<h4 id="orge207a98"><span class="section-number-4">4.4.2</span> move previous history to current file (if any)</h4>
+<div class="outline-text-4" id="text-4-4-2">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #4169e1;">if</span> [ -f <span style="color: #bc8f8f;">"${HOME}/.bash_history "</span> ]; <span style="color: #4169e1;">then</span>
+    <span style="color: #4169e1;">if</span> [ -f <span style="color: #bc8f8f;">"${HISTFILE}"</span> ]; <span style="color: #4169e1;">then</span>
+        cat <span style="color: #bc8f8f;">"${HOME}"</span>/.bash_history &gt;&gt; <span style="color: #bc8f8f;">"${HISTFILE}"</span>
+    <span style="color: #4169e1;">fi</span>
+    rm <span style="color: #bc8f8f;">"${HOME}"</span>/.bash_history
+<span style="color: #4169e1;">fi</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd5332c1" class="outline-4">
+<h4 id="orgd5332c1"><span class="section-number-4">4.4.3</span> Lines of history in memory</h4>
+<div class="outline-text-4" id="text-4-4-3">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b8860b;">HISTSIZE</span>=10000
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7393ce2" class="outline-4">
+<h4 id="org7393ce2"><span class="section-number-4">4.4.4</span> Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)</h4>
+<div class="outline-text-4" id="text-4-4-4">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b8860b;">HISTFILESIZE</span>=2000000
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org0de6724" class="outline-4">
+<h4 id="org0de6724"><span class="section-number-4">4.4.5</span> Append to history instead of overwrite</h4>
+<div class="outline-text-4" id="text-4-4-5">
+<div class="org-src-container">
+<pre class="src src-sh">shopt -s histappend
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5164804" class="outline-4">
+<h4 id="org5164804"><span class="section-number-4">4.4.6</span> Ignore redundant or space commands</h4>
+<div class="outline-text-4" id="text-4-4-6">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b8860b;">HISTCONTROL</span>=ignoreboth
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9147cef" class="outline-4">
+<h4 id="org9147cef"><span class="section-number-4">4.4.7</span> Ignore more</h4>
+<div class="outline-text-4" id="text-4-4-7">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b8860b;">HISTIGNORE</span>=<span style="color: #bc8f8f;">'ls:ll:ls -alh:pwd:clear:history'</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3a0296f" class="outline-4">
+<h4 id="org3a0296f"><span class="section-number-4">4.4.8</span> Set time format</h4>
+<div class="outline-text-4" id="text-4-4-8">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b8860b;">HISTTIMEFORMAT</span>=<span style="color: #bc8f8f;">'%F %T '</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfe0b491" class="outline-4">
+<h4 id="orgfe0b491"><span class="section-number-4">4.4.9</span> Multiple commands on one line show up as a single line</h4>
+<div class="outline-text-4" id="text-4-4-9">
+<div class="org-src-container">
+<pre class="src src-sh">shopt -s cmdhist
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org104c442" class="outline-4">
+<h4 id="org104c442"><span class="section-number-4">4.4.10</span> Append new history lines, clear the history list, re-read the history list, print prompt.</h4>
+<div class="outline-text-4" id="text-4-4-10">
+<p>
+Currently unused
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #00008b;">export</span> <span style="color: #b8860b;">PROMPT_COMMAND</span>=<span style="color: #bc8f8f;">"history -a; history -c; history -r; ${PROMPT_COMMAND}"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2022-06-11 Sat 00:00</p>
+<p class="author">Author: Kristian Alexander P</p>
+<p class="date">Created: 2024-06-11 Tue 02:26</p>
+</div>
+</body>
+</html>
