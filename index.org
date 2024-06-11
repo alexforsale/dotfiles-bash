@@ -178,7 +178,7 @@ There's many more shell options for bash, but I don't use them much.
       # End ~/.bashrc
    #+end_src
    In case I need to override all or some settings above, I'll put them in this file.
-* =~/.bash_profile=
+* ~/.bash_profile
   :PROPERTIES:
   :header-args: :tangle ~/.bash_profile :padline no :shebang #!/usr/bin/env bash
   :END:
@@ -214,7 +214,7 @@ There's many more shell options for bash, but I don't use them much.
    # End ~/.bash_profile
    #+end_src
    Again, in case I need to override all or some settings above...
-* =~/.bash_logout=
+* ~/.bash_logout
   :PROPERTIES:
   :header-args: :tangle ~/.bash_logout :padline no :shebang #!/usr/bin/env bash
   :END:
@@ -238,7 +238,7 @@ There's many more shell options for bash, but I don't use them much.
    # End ~/.bash_logout
    #+end_src
 * ~/.config/bash.d
-** =bash_aliases=
+** bash_aliases
    :PROPERTIES:
    :header-args: :tangle ~/.config/bash.d/bash_aliases :mkdirp t :padline no :shebang #!/usr/bin/env bash
    :END:
