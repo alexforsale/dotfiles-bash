@@ -43,7 +43,7 @@ The way I set my bash startup files:
 
 * ~/.bashrc
   :PROPERTIES:
-  :header-args: :tangle ~/.bashrc :padline no :shebang #!/usr/bin/env bash
+  :header-args: :tangle .bashrc :padline no :shebang #!/usr/bin/env bash
   :END:
 ** header :noexport:
    #+begin_src sh
@@ -180,7 +180,7 @@ There's many more shell options for bash, but I don't use them much.
    In case I need to override all or some settings above, I'll put them in this file.
 * ~/.bash_profile
   :PROPERTIES:
-  :header-args: :tangle ~/.bash_profile :padline no :shebang #!/usr/bin/env bash
+  :header-args: :tangle .bash_profile :padline no :shebang #!/usr/bin/env bash
   :END:
 ** header :noexport:
    #+begin_src sh
@@ -216,7 +216,7 @@ There's many more shell options for bash, but I don't use them much.
    Again, in case I need to override all or some settings above...
 * ~/.bash_logout
   :PROPERTIES:
-  :header-args: :tangle ~/.bash_logout :padline no :shebang #!/usr/bin/env bash
+  :header-args: :tangle .bash_logout :padline no :shebang #!/usr/bin/env bash
   :END:
 ** header :noexport:
    #+begin_src sh
@@ -240,7 +240,7 @@ There's many more shell options for bash, but I don't use them much.
 * ~/.config/bash.d
 ** bash_aliases
    :PROPERTIES:
-   :header-args: :tangle ~/.config/bash.d/bash_aliases :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :header-args: :tangle .config/bash.d/bash_aliases :mkdirp t :padline no :shebang #!/usr/bin/env bash
    :END:
    Most of the =coreutils= programs have a syntax for color.
 *** color support of most of the =coreutils=
@@ -281,7 +281,7 @@ There's many more shell options for bash, but I don't use them much.
     I don't think I've ever use this anymore, but it still nice to have
 ** colors.bash
    :PROPERTIES:
-   :header-args: :tangle ~/.config/bash.d/colors.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :header-args: :tangle .config/bash.d/colors.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
    :END:
 *** PS1
 Set PS1 when the terminal support it.
@@ -479,7 +479,7 @@ Set PS1 when the terminal support it.
     #+end_src
 ** functions.bash
    :PROPERTIES:
-   :header-args: :tangle ~/.config/bash.d/functions.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :header-args: :tangle .config/bash.d/functions.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
    :END:
 *** header :noexport:
     #+begin_src sh
@@ -531,7 +531,7 @@ Set PS1 when the terminal support it.
     Appending an item to PATH
 ** history.bash
    :PROPERTIES:
-   :header-args: :tangle ~/.config/bash.d/history.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
+   :header-args: :tangle .config/bash.d/history.bash :mkdirp t :padline no :shebang #!/usr/bin/env bash
    :END:
    Here I set some variable that is use by the bash history. Most of these are self explainatory.
 *** set the location of history file
