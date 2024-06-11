@@ -41,6 +41,9 @@ The way I set my bash startup files:
 - Modular :: It's basically a script, separate each uses to a specific file.
 - Simple :: Should work on many other distributions that uses bash, I use this configuration for archlinux, ubuntu, debian, even freebsd. 
 
+#+caption: konsole on /archlinux/ 
+[[./assets/img/konsole.png][file:assets/img/konsole.png]]
+
 * ~/.bashrc
   :PROPERTIES:
   :header-args: :tangle .bashrc :padline no :shebang #!/usr/bin/env bash
