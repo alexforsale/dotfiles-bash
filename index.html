@@ -3,86 +3,91 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-06-11 Tue 08:10 -->
+<!-- 2025-04-18 Fri 14:20 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Bash Startup Files</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="Kristian Alexander P" />
+<meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+<style> #content{max-width:1800px;}</style>
+<style> p{max-width:800px;}</style>
+<style> li{max-width:800px;}</style>
 </head>
 <body>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">Bash Startup Files</h1>
-<div id="table-of-contents">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org28760da">~/.bashrc</a>
+<li><a href="#org25bcfe0">~/.bashrc</a>
 <ul>
-<li><a href="#org8fba4d8">do nothing if non-interactive</a></li>
-<li><a href="#org8ab418c">bash directories</a></li>
-<li><a href="#org11a904e">shell options</a></li>
-<li><a href="#orgfa7d0be">aliases</a></li>
-<li><a href="#org929f77e">completion</a></li>
-<li><a href="#org6059e72">color prompt</a></li>
-<li><a href="#org67b03c4">history</a></li>
-<li><a href="#org38c0cfb">custom functions</a></li>
-<li><a href="#org67f1553">freebsd specifics</a></li>
-<li><a href="#orgdcb8b88">history navigation with ctrl-r</a></li>
-<li><a href="#org4750115">local override</a></li>
+<li><a href="#orgf876bec">do nothing if non-interactive</a></li>
+<li><a href="#org8aff128">bash directories</a></li>
+<li><a href="#org53708a7">shell options</a></li>
+<li><a href="#org6edf0ee">aliases</a></li>
+<li><a href="#org749e621">completion</a></li>
+<li><a href="#orgf1e639b">color prompt</a></li>
+<li><a href="#orgc7d243a">history</a></li>
+<li><a href="#org96cec23">custom functions</a></li>
+<li><a href="#orgacbb55b">freebsd specifics</a></li>
+<li><a href="#orgde5b262">history navigation with ctrl-r</a></li>
+<li><a href="#orgdf2a283">local override</a></li>
 </ul>
 </li>
-<li><a href="#org999e4f7">~/.bash_profile</a>
+<li><a href="#org931e960">~/.bash_profile</a>
 <ul>
-<li><a href="#orgd1e66bf">source <code>~/etc/profile</code></a></li>
-<li><a href="#orgd7b94be">This differs in several <i>Linux distribution</i>.</a></li>
-<li><a href="#org6dffe7e">local override</a></li>
+<li><a href="#org2b552ea">source <code>~/etc/profile</code></a></li>
+<li><a href="#org5122ede">This differs in several <i>Linux distribution</i>.</a></li>
+<li><a href="#org4b8e30a">local override</a></li>
 </ul>
 </li>
-<li><a href="#org5517d72">~/.bash_logout</a>
+<li><a href="#org2308f07">~/.bash_logout</a>
 <ul>
-<li><a href="#org2a73f65">clear console on logout</a></li>
+<li><a href="#org85944f6">clear console on logout</a></li>
 </ul>
 </li>
-<li><a href="#orgd296221">~/.config/bash.d</a>
+<li><a href="#orgb9a0a06">~/.config/bash.d</a>
 <ul>
-<li><a href="#orgbc7145a">bash_aliases</a>
+<li><a href="#orgf0b2045">bash_aliases</a>
 <ul>
-<li><a href="#org9ee8b6c">color support of most of the <code>coreutils</code></a></li>
-<li><a href="#orge943c3f">ls aliases</a></li>
-<li><a href="#orgd26cc98">alert</a></li>
+<li><a href="#orgcbf25a9">color support of most of the <code>coreutils</code></a></li>
+<li><a href="#org3469bc0">ls aliases</a></li>
+<li><a href="#org2812305">alert</a></li>
 </ul>
 </li>
-<li><a href="#org9b6b5f1">colors.bash</a>
+<li><a href="#org99da9c9">colors.bash</a>
 <ul>
-<li><a href="#orgd92aad1">PS1</a></li>
+<li><a href="#orgb1862a6">PS1</a></li>
 </ul>
 </li>
-<li><a href="#org912d225">functions.bash</a>
+<li><a href="#org9a8840d">functions.bash</a>
 <ul>
-<li><a href="#org209818f">pathremove</a></li>
-<li><a href="#orgd6221a3">pathprepend</a></li>
-<li><a href="#orgb8002a0">pathappend</a></li>
+<li><a href="#orgb942b1b">pathremove</a></li>
+<li><a href="#orgf52b343">pathprepend</a></li>
+<li><a href="#orgf9bb50d">pathappend</a></li>
 </ul>
 </li>
-<li><a href="#orgece1232">history.bash</a>
+<li><a href="#org4c79369">history.bash</a>
 <ul>
-<li><a href="#org295f5f2">set the location of history file</a></li>
-<li><a href="#orgc3653e1">move previous history to current file (if any)</a></li>
-<li><a href="#org8fcba28">Lines of history in memory</a></li>
-<li><a href="#orgb823c06">Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)</a></li>
-<li><a href="#orgb3e1c7a">Append to history instead of overwrite</a></li>
-<li><a href="#orga6b1c9c">Ignore redundant or space commands</a></li>
-<li><a href="#orgba48c01">Ignore more</a></li>
-<li><a href="#org54f8aeb">Set time format</a></li>
-<li><a href="#orgf43828c">Multiple commands on one line show up as a single line</a></li>
-<li><a href="#org6d16e52">Append new history lines, clear the history list, re-read the history list, print prompt.</a></li>
+<li><a href="#org90bcffd">set the location of history file</a></li>
+<li><a href="#org551dc33">move previous history to current file (if any)</a></li>
+<li><a href="#org2c53317">Lines of history in memory</a></li>
+<li><a href="#org231cd37">Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)</a></li>
+<li><a href="#orgad0f1bf">Append to history instead of overwrite</a></li>
+<li><a href="#org3f75dfa">Ignore redundant or space commands</a></li>
+<li><a href="#org011c7f6">Ignore more</a></li>
+<li><a href="#org99ce495">Set time format</a></li>
+<li><a href="#org833f405">Multiple commands on one line show up as a single line</a></li>
+<li><a href="#org02ca2db">Append new history lines, clear the history list, re-read the history list, print prompt.</a></li>
 </ul>
 </li>
 </ul>
@@ -185,19 +190,19 @@ The way I set my bash startup files:
 </dl>
 
 
-<div class="figure">
+<div id="org79c1453" class="figure">
 <p><a href="./assets/img/konsole.png"><img src="assets/img/konsole.png" alt="konsole.png" /></a>
 </p>
 <p><span class="figure-number">Figure 1: </span>konsole on <i>archlinux</i></p>
 </div>
 
-<div id="outline-container-org28760da" class="outline-2">
-<h2 id="org28760da">~/.bashrc</h2>
-<div class="outline-text-2" id="text-org28760da">
+<div id="outline-container-org25bcfe0" class="outline-2">
+<h2 id="org25bcfe0">~/.bashrc</h2>
+<div class="outline-text-2" id="text-org25bcfe0">
 </div>
-<div id="outline-container-org8fba4d8" class="outline-3">
-<h3 id="org8fba4d8">do nothing if non-interactive</h3>
-<div class="outline-text-3" id="text-org8fba4d8">
+<div id="outline-container-orgf876bec" class="outline-3">
+<h3 id="orgf876bec">do nothing if non-interactive</h3>
+<div class="outline-text-3" id="text-orgf876bec">
 <p>
 For when run as a script.
 </p>
@@ -214,9 +219,9 @@ For when run as a script.
 </div>
 </div>
 </div>
-<div id="outline-container-org8ab418c" class="outline-3">
-<h3 id="org8ab418c">bash directories</h3>
-<div class="outline-text-3" id="text-org8ab418c">
+<div id="outline-container-org8aff128" class="outline-3">
+<h3 id="org8aff128">bash directories</h3>
+<div class="outline-text-3" id="text-org8aff128">
 <p>
 I'm separating the configuration into smaller files. <code>XDG_CONFIG_HOME</code> and <code>XDG_DATA_HOME</code> should be set by the system, I also declared them in my repository for <a href="https://github.com/alexforsale/dotfiles-shells/">common shells</a>.
 </p>
@@ -231,9 +236,9 @@ I'm separating the configuration into smaller files. <code>XDG_CONFIG_HOME</code
 </div>
 </div>
 </div>
-<div id="outline-container-org11a904e" class="outline-3">
-<h3 id="org11a904e">shell options</h3>
-<div class="outline-text-3" id="text-org11a904e">
+<div id="outline-container-org53708a7" class="outline-3">
+<h3 id="org53708a7">shell options</h3>
+<div class="outline-text-3" id="text-org53708a7">
 <p>
 There's many more shell options for bash, but I don't use them much.
 </p>
@@ -245,9 +250,9 @@ shopt -s checkwinsize
 </div>
 </div>
 </div>
-<div id="outline-container-orgfa7d0be" class="outline-3">
-<h3 id="orgfa7d0be">aliases</h3>
-<div class="outline-text-3" id="text-orgfa7d0be">
+<div id="outline-container-org6edf0ee" class="outline-3">
+<h3 id="org6edf0ee">aliases</h3>
+<div class="outline-text-3" id="text-org6edf0ee">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">Alias definitions.</span>
 <span style="color: #b22222;"># </span><span style="color: #b22222;">You may want to put all your additions into a separate file like</span>
@@ -263,9 +268,9 @@ Note that in <i>archlinux</i> the /usr/share/doc/bash-doc is not exists
 </p>
 </div>
 </div>
-<div id="outline-container-org929f77e" class="outline-3">
-<h3 id="org929f77e">completion</h3>
-<div class="outline-text-3" id="text-org929f77e">
+<div id="outline-container-org749e621" class="outline-3">
+<h3 id="org749e621">completion</h3>
+<div class="outline-text-3" id="text-org749e621">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #4169e1;">if</span> [[ -z <span style="color: #bc8f8f;">"${BASH_COMPLETION_VERSINFO}"</span> ]];<span style="color: #4169e1;">then</span>
     <span style="color: #b22222;"># </span><span style="color: #b22222;">enable programmable completion features (you don't need to enable</span>
@@ -298,9 +303,9 @@ This should cover every location for bash completion.
 </p>
 </div>
 </div>
-<div id="outline-container-org6059e72" class="outline-3">
-<h3 id="org6059e72">color prompt</h3>
-<div class="outline-text-3" id="text-org6059e72">
+<div id="outline-container-orgf1e639b" class="outline-3">
+<h3 id="orgf1e639b">color prompt</h3>
+<div class="outline-text-3" id="text-orgf1e639b">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">color prompt, this is gentoo bashrc file</span>
 [[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/colors.bash"</span> ]] &amp;&amp; . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/colors.bash
@@ -311,9 +316,9 @@ Taken from gentoo i guess&#x2026;
 </p>
 </div>
 </div>
-<div id="outline-container-org67b03c4" class="outline-3">
-<h3 id="org67b03c4">history</h3>
-<div class="outline-text-3" id="text-org67b03c4">
+<div id="outline-container-orgc7d243a" class="outline-3">
+<h3 id="orgc7d243a">history</h3>
+<div class="outline-text-3" id="text-orgc7d243a">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">history</span>
 [[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/history.bash"</span> ]] &amp;&amp; . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/history.bash
@@ -324,9 +329,9 @@ setup history
 </p>
 </div>
 </div>
-<div id="outline-container-org38c0cfb" class="outline-3">
-<h3 id="org38c0cfb">custom functions</h3>
-<div class="outline-text-3" id="text-org38c0cfb">
+<div id="outline-container-org96cec23" class="outline-3">
+<h3 id="org96cec23">custom functions</h3>
+<div class="outline-text-3" id="text-org96cec23">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">functions</span>
 [[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/functions.bash"</span> ]] &amp;&amp; . <span style="color: #bc8f8f;">"${BASH_DIR}"</span>/functions.bash
@@ -337,9 +342,9 @@ Put custom functions in a file.
 </p>
 </div>
 </div>
-<div id="outline-container-org67f1553" class="outline-3">
-<h3 id="org67f1553">freebsd specifics</h3>
-<div class="outline-text-3" id="text-org67f1553">
+<div id="outline-container-orgacbb55b" class="outline-3">
+<h3 id="orgacbb55b">freebsd specifics</h3>
+<div class="outline-text-3" id="text-orgacbb55b">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #4169e1;">if</span> [[ <span style="color: #bc8f8f;">"${DISTRO}"</span> != <span style="color: #bc8f8f;">"freebsd"</span> ]]; <span style="color: #4169e1;">then</span>
     <span style="color: #b8860b;">iatest</span>=$(expr index <span style="color: #bc8f8f;">"$-"</span> i)
@@ -362,9 +367,9 @@ Some settings specific to FreeBSD.
 </p>
 </div>
 </div>
-<div id="outline-container-orgdcb8b88" class="outline-3">
-<h3 id="orgdcb8b88">history navigation with ctrl-r</h3>
-<div class="outline-text-3" id="text-orgdcb8b88">
+<div id="outline-container-orgde5b262" class="outline-3">
+<h3 id="orgde5b262">history navigation with ctrl-r</h3>
+<div class="outline-text-3" id="text-orgde5b262">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">Allow ctrl-S for history navigation (with ctrl-R)</span>
 stty -ixon
@@ -375,9 +380,9 @@ Enable CTRL-s and CTRL-r
 </p>
 </div>
 </div>
-<div id="outline-container-org4750115" class="outline-3">
-<h3 id="org4750115">local override</h3>
-<div class="outline-text-3" id="text-org4750115">
+<div id="outline-container-orgdf2a283" class="outline-3">
+<h3 id="orgdf2a283">local override</h3>
+<div class="outline-text-3" id="text-orgdf2a283">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">local bashrc</span>
 <span style="color: #4169e1;">if</span> [[ -f <span style="color: #bc8f8f;">"${BASH_DIR}/bashrc.local"</span> ]];<span style="color: #4169e1;">then</span>
@@ -392,13 +397,13 @@ In case I need to override all or some settings above, I'll put them in this fil
 </div>
 </div>
 </div>
-<div id="outline-container-org999e4f7" class="outline-2">
-<h2 id="org999e4f7">~/.bash_profile</h2>
-<div class="outline-text-2" id="text-org999e4f7">
+<div id="outline-container-org931e960" class="outline-2">
+<h2 id="org931e960">~/.bash_profile</h2>
+<div class="outline-text-2" id="text-org931e960">
 </div>
-<div id="outline-container-orgd1e66bf" class="outline-3">
-<h3 id="orgd1e66bf">source <code>~/etc/profile</code></h3>
-<div class="outline-text-3" id="text-orgd1e66bf">
+<div id="outline-container-org2b552ea" class="outline-3">
+<h3 id="org2b552ea">source <code>~/etc/profile</code></h3>
+<div class="outline-text-3" id="text-org2b552ea">
 <div class="org-src-container">
 <pre class="src src-sh">[[ -f /etc/profile ]] &amp;&amp; source /etc/profile
 </pre>
@@ -408,9 +413,9 @@ Making sure that /etc/profile is also sourced, the only downside is some variabl
 </p>
 </div>
 </div>
-<div id="outline-container-orgd7b94be" class="outline-3">
-<h3 id="orgd7b94be">This differs in several <i>Linux distribution</i>.</h3>
-<div class="outline-text-3" id="text-orgd7b94be">
+<div id="outline-container-org5122ede" class="outline-3">
+<h3 id="org5122ede">This differs in several <i>Linux distribution</i>.</h3>
+<div class="outline-text-3" id="text-org5122ede">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">in the actual startup sequences, "~/.bash_profile" is invoked</span>
 <span style="color: #b22222;"># </span><span style="color: #b22222;">before "~/.profile" so we need to source "~/.profile" first.</span>
@@ -420,9 +425,9 @@ Making sure that /etc/profile is also sourced, the only downside is some variabl
 </div>
 </div>
 </div>
-<div id="outline-container-org6dffe7e" class="outline-3">
-<h3 id="org6dffe7e">local override</h3>
-<div class="outline-text-3" id="text-org6dffe7e">
+<div id="outline-container-org4b8e30a" class="outline-3">
+<h3 id="org4b8e30a">local override</h3>
+<div class="outline-text-3" id="text-org4b8e30a">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">local bash_profile</span>
 <span style="color: #b22222;"># </span><span style="color: #b22222;">${BASH_DIR} should already set by now</span>
@@ -437,13 +442,13 @@ Again, in case I need to override all or some settings above&#x2026;
 </div>
 </div>
 </div>
-<div id="outline-container-org5517d72" class="outline-2">
-<h2 id="org5517d72">~/.bash_logout</h2>
-<div class="outline-text-2" id="text-org5517d72">
+<div id="outline-container-org2308f07" class="outline-2">
+<h2 id="org2308f07">~/.bash_logout</h2>
+<div class="outline-text-2" id="text-org2308f07">
 </div>
-<div id="outline-container-org2a73f65" class="outline-3">
-<h3 id="org2a73f65">clear console on logout</h3>
-<div class="outline-text-3" id="text-org2a73f65">
+<div id="outline-container-org85944f6" class="outline-3">
+<h3 id="org85944f6">clear console on logout</h3>
+<div class="outline-text-3" id="text-org85944f6">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">when leaving the console clear the screen to increase privacy</span>
 
@@ -458,20 +463,20 @@ Again, in case I need to override all or some settings above&#x2026;
 </div>
 </div>
 </div>
-<div id="outline-container-orgd296221" class="outline-2">
-<h2 id="orgd296221">~/.config/bash.d</h2>
-<div class="outline-text-2" id="text-orgd296221">
+<div id="outline-container-orgb9a0a06" class="outline-2">
+<h2 id="orgb9a0a06">~/.config/bash.d</h2>
+<div class="outline-text-2" id="text-orgb9a0a06">
 </div>
-<div id="outline-container-orgbc7145a" class="outline-3">
-<h3 id="orgbc7145a">bash_aliases</h3>
-<div class="outline-text-3" id="text-orgbc7145a">
+<div id="outline-container-orgf0b2045" class="outline-3">
+<h3 id="orgf0b2045">bash_aliases</h3>
+<div class="outline-text-3" id="text-orgf0b2045">
 <p>
 Most of the <code>coreutils</code> programs have a syntax for color.
 </p>
 </div>
-<div id="outline-container-org9ee8b6c" class="outline-4">
-<h4 id="org9ee8b6c">color support of most of the <code>coreutils</code></h4>
-<div class="outline-text-4" id="text-org9ee8b6c">
+<div id="outline-container-orgcbf25a9" class="outline-4">
+<h4 id="orgcbf25a9">color support of most of the <code>coreutils</code></h4>
+<div class="outline-text-4" id="text-orgcbf25a9">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">enable color support of ls and also add handy aliases</span>
 <span style="color: #4169e1;">if</span> [ -x /usr/bin/dircolors ]; <span style="color: #4169e1;">then</span>
@@ -493,9 +498,9 @@ Most of the <code>coreutils</code> programs have a syntax for color.
 </div>
 </div>
 </div>
-<div id="outline-container-orge943c3f" class="outline-4">
-<h4 id="orge943c3f">ls aliases</h4>
-<div class="outline-text-4" id="text-orge943c3f">
+<div id="outline-container-org3469bc0" class="outline-4">
+<h4 id="org3469bc0">ls aliases</h4>
+<div class="outline-text-4" id="text-org3469bc0">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">some more ls aliases</span>
 alias <span style="color: #b8860b;">ll</span>=<span style="color: #bc8f8f;">'ls -alF'</span>
@@ -508,9 +513,9 @@ Some useful ls aliases.
 </p>
 </div>
 </div>
-<div id="outline-container-orgd26cc98" class="outline-4">
-<h4 id="orgd26cc98">alert</h4>
-<div class="outline-text-4" id="text-orgd26cc98">
+<div id="outline-container-org2812305" class="outline-4">
+<h4 id="org2812305">alert</h4>
+<div class="outline-text-4" id="text-org2812305">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b22222;"># </span><span style="color: #b22222;">Add an "alert" alias for long running commands. Use like so:</span>
 <span style="color: #b22222;"># </span><span style="color: #b22222;">sleep 10; alert</span>
@@ -525,13 +530,13 @@ I don't think I've ever use this anymore, but it still nice to have
 </div>
 </div>
 </div>
-<div id="outline-container-org9b6b5f1" class="outline-3">
-<h3 id="org9b6b5f1">colors.bash</h3>
-<div class="outline-text-3" id="text-org9b6b5f1">
+<div id="outline-container-org99da9c9" class="outline-3">
+<h3 id="org99da9c9">colors.bash</h3>
+<div class="outline-text-3" id="text-org99da9c9">
 </div>
-<div id="outline-container-orgd92aad1" class="outline-4">
-<h4 id="orgd92aad1">PS1</h4>
-<div class="outline-text-4" id="text-orgd92aad1">
+<div id="outline-container-orgb1862a6" class="outline-4">
+<h4 id="orgb1862a6">PS1</h4>
+<div class="outline-text-4" id="text-orgb1862a6">
 <p>
 Set PS1 when the terminal support it.
 </p>
@@ -731,13 +736,13 @@ Set PS1 when the terminal support it.
 </div>
 </div>
 </div>
-<div id="outline-container-org912d225" class="outline-3">
-<h3 id="org912d225">functions.bash</h3>
-<div class="outline-text-3" id="text-org912d225">
+<div id="outline-container-org9a8840d" class="outline-3">
+<h3 id="org9a8840d">functions.bash</h3>
+<div class="outline-text-3" id="text-org9a8840d">
 </div>
-<div id="outline-container-org209818f" class="outline-4">
-<h4 id="org209818f">pathremove</h4>
-<div class="outline-text-4" id="text-org209818f">
+<div id="outline-container-orgb942b1b" class="outline-4">
+<h4 id="orgb942b1b">pathremove</h4>
+<div class="outline-text-4" id="text-orgb942b1b">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #4169e1;">if</span> [ ! <span style="color: #bc8f8f;">"$(type pathremove &gt;/dev/null 2&gt;&amp;1)"</span> ] ; <span style="color: #4169e1;">then</span>
     pathremove () {
@@ -761,9 +766,9 @@ This function is for removing an entry from PATH
 </p>
 </div>
 </div>
-<div id="outline-container-orgd6221a3" class="outline-4">
-<h4 id="orgd6221a3">pathprepend</h4>
-<div class="outline-text-4" id="text-orgd6221a3">
+<div id="outline-container-orgf52b343" class="outline-4">
+<h4 id="orgf52b343">pathprepend</h4>
+<div class="outline-text-4" id="text-orgf52b343">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #4169e1;">if</span> [ ! <span style="color: #bc8f8f;">"$(type pathprepend &gt;/dev/null 2&gt;&amp;1)"</span> ] ; <span style="color: #4169e1;">then</span>
     pathprepend () {
@@ -780,9 +785,9 @@ For prepending an item into PATH
 </p>
 </div>
 </div>
-<div id="outline-container-orgb8002a0" class="outline-4">
-<h4 id="orgb8002a0">pathappend</h4>
-<div class="outline-text-4" id="text-orgb8002a0">
+<div id="outline-container-orgf9bb50d" class="outline-4">
+<h4 id="orgf9bb50d">pathappend</h4>
+<div class="outline-text-4" id="text-orgf9bb50d">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #4169e1;">if</span> [ ! <span style="color: #bc8f8f;">"$(type pathappend &gt;/dev/null 2&gt;&amp;1)"</span> ] ; <span style="color: #4169e1;">then</span>
     pathappend () {
@@ -801,25 +806,25 @@ Appending an item to PATH
 </div>
 </div>
 </div>
-<div id="outline-container-orgece1232" class="outline-3">
-<h3 id="orgece1232">history.bash</h3>
-<div class="outline-text-3" id="text-orgece1232">
+<div id="outline-container-org4c79369" class="outline-3">
+<h3 id="org4c79369">history.bash</h3>
+<div class="outline-text-3" id="text-org4c79369">
 <p>
 Here I set some variable that is use by the bash history. Most of these are self explainatory.
 </p>
 </div>
-<div id="outline-container-org295f5f2" class="outline-4">
-<h4 id="org295f5f2">set the location of history file</h4>
-<div class="outline-text-4" id="text-org295f5f2">
+<div id="outline-container-org90bcffd" class="outline-4">
+<h4 id="org90bcffd">set the location of history file</h4>
+<div class="outline-text-4" id="text-org90bcffd">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #00008b;">export</span> <span style="color: #b8860b;">HISTFILE</span>=<span style="color: #bc8f8f;">"${BASH_DATA}"</span>/bash_history
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc3653e1" class="outline-4">
-<h4 id="orgc3653e1">move previous history to current file (if any)</h4>
-<div class="outline-text-4" id="text-orgc3653e1">
+<div id="outline-container-org551dc33" class="outline-4">
+<h4 id="org551dc33">move previous history to current file (if any)</h4>
+<div class="outline-text-4" id="text-org551dc33">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #4169e1;">if</span> [ -f <span style="color: #bc8f8f;">"${HOME}/.bash_history "</span> ]; <span style="color: #4169e1;">then</span>
     <span style="color: #4169e1;">if</span> [ -f <span style="color: #bc8f8f;">"${HISTFILE}"</span> ]; <span style="color: #4169e1;">then</span>
@@ -831,72 +836,72 @@ Here I set some variable that is use by the bash history. Most of these are self
 </div>
 </div>
 </div>
-<div id="outline-container-org8fcba28" class="outline-4">
-<h4 id="org8fcba28">Lines of history in memory</h4>
-<div class="outline-text-4" id="text-org8fcba28">
+<div id="outline-container-org2c53317" class="outline-4">
+<h4 id="org2c53317">Lines of history in memory</h4>
+<div class="outline-text-4" id="text-org2c53317">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b8860b;">HISTSIZE</span>=10000
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb823c06" class="outline-4">
-<h4 id="orgb823c06">Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)</h4>
-<div class="outline-text-4" id="text-orgb823c06">
+<div id="outline-container-org231cd37" class="outline-4">
+<h4 id="org231cd37">Save 2,000,000 lines of history to disk (will have to grep ~/.bash_history for full listing)</h4>
+<div class="outline-text-4" id="text-org231cd37">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b8860b;">HISTFILESIZE</span>=2000000
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb3e1c7a" class="outline-4">
-<h4 id="orgb3e1c7a">Append to history instead of overwrite</h4>
-<div class="outline-text-4" id="text-orgb3e1c7a">
+<div id="outline-container-orgad0f1bf" class="outline-4">
+<h4 id="orgad0f1bf">Append to history instead of overwrite</h4>
+<div class="outline-text-4" id="text-orgad0f1bf">
 <div class="org-src-container">
 <pre class="src src-sh">shopt -s histappend
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orga6b1c9c" class="outline-4">
-<h4 id="orga6b1c9c">Ignore redundant or space commands</h4>
-<div class="outline-text-4" id="text-orga6b1c9c">
+<div id="outline-container-org3f75dfa" class="outline-4">
+<h4 id="org3f75dfa">Ignore redundant or space commands</h4>
+<div class="outline-text-4" id="text-org3f75dfa">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b8860b;">HISTCONTROL</span>=ignoreboth
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgba48c01" class="outline-4">
-<h4 id="orgba48c01">Ignore more</h4>
-<div class="outline-text-4" id="text-orgba48c01">
+<div id="outline-container-org011c7f6" class="outline-4">
+<h4 id="org011c7f6">Ignore more</h4>
+<div class="outline-text-4" id="text-org011c7f6">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b8860b;">HISTIGNORE</span>=<span style="color: #bc8f8f;">'ls:ll:ls -alh:pwd:clear:history'</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org54f8aeb" class="outline-4">
-<h4 id="org54f8aeb">Set time format</h4>
-<div class="outline-text-4" id="text-org54f8aeb">
+<div id="outline-container-org99ce495" class="outline-4">
+<h4 id="org99ce495">Set time format</h4>
+<div class="outline-text-4" id="text-org99ce495">
 <div class="org-src-container">
 <pre class="src src-sh"><span style="color: #b8860b;">HISTTIMEFORMAT</span>=<span style="color: #bc8f8f;">'%F %T '</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf43828c" class="outline-4">
-<h4 id="orgf43828c">Multiple commands on one line show up as a single line</h4>
-<div class="outline-text-4" id="text-orgf43828c">
+<div id="outline-container-org833f405" class="outline-4">
+<h4 id="org833f405">Multiple commands on one line show up as a single line</h4>
+<div class="outline-text-4" id="text-org833f405">
 <div class="org-src-container">
 <pre class="src src-sh">shopt -s cmdhist
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org6d16e52" class="outline-4">
-<h4 id="org6d16e52">Append new history lines, clear the history list, re-read the history list, print prompt.</h4>
-<div class="outline-text-4" id="text-org6d16e52">
+<div id="outline-container-org02ca2db" class="outline-4">
+<h4 id="org02ca2db">Append new history lines, clear the history list, re-read the history list, print prompt.</h4>
+<div class="outline-text-4" id="text-org02ca2db">
 <p>
 Currently unused
 </p>
@@ -912,7 +917,7 @@ Currently unused
 <div id="postamble" class="status">
 <p class="date">Date: 2022-06-11 Sat 00:00</p>
 <p class="author">Author: Kristian Alexander P</p>
-<p class="date">Created: 2024-06-11 Tue 08:10</p>
+<p class="date">Created: 2025-04-18 Fri 14:20</p>
 </div>
 </body>
 </html>
