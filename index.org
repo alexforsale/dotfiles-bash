@@ -16,6 +16,9 @@
 #+startup: indent fold
 #+export_file_name: index.html
 #+setupfile: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+HTML_HEAD: <style> #content{max-width:1800px;}</style>
+#+HTML_HEAD: <style> p{max-width:800px;}</style>
+#+HTML_HEAD: <style> li{max-width:800px;}</style>
 
 Bash (Bourne Again SHell) is pretty much universal now, almost every unix-like distributions ship bash as the default shell. This is probably because /GNU/ uses bash as their default shell and for those who don't know, linux is GNU/linux. And the GNU collection of utilities are designed to be used with bash as the shell.
 
