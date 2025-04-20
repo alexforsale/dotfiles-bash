@@ -24,3 +24,4 @@
 #+end_html
 
 * About
+My /bash/ configuration files. This repository is a part of a collection of my [[https://github.com/alexforsale/dotfiles/][dotfiles]]. Please see [[./index.org][index.org]] for details.
