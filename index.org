@@ -123,7 +123,7 @@ There's many more shell options for bash, but I don't use them much.
      fi
 
      # user completion files
-     if [[ -d "{$BASH_DIR}/bash_completion.d" ]]; then
+     if [[ -d "${BASH_DIR}/bash_completion.d" ]]; then
          for i in "${BASH_DIR}"/bash_completion.d/*.bash; do
              if [[ -r ${i} ]]; then
                  . "${i}"
