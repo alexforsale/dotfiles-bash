@@ -175,6 +175,10 @@ There's many more shell options for bash, but I don't use them much.
    stty -ixon
    #+end_src
    Enable CTRL-s and CTRL-r
+** direnv 
+#+begin_src sh
+  [[ "$(command -v direnv)" ]] && eval "$(direnv hook bash)"
+#+end_src
 ** local override
    #+begin_src sh
    # local bashrc
