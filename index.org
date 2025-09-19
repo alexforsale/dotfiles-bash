@@ -266,6 +266,11 @@ There's many more shell options for bash, but I don't use them much.
           alias egrep='egrep --color=auto'
           alias diff='diff --color=auto'
           alias ip='ip -color=auto'
+
+      	if [[ "$(command-v source-highlight-esc.sh)"]]; then
+      		export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
+      		export LESS='-R '
+      	fi
       fi
     #+end_src
 *** ls aliases
